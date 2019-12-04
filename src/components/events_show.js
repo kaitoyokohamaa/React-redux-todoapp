@@ -10,6 +10,12 @@ class EventsShow extends Component{
       this.onSubmit=this.onSubmit.bind(this)
       this.onDeleteClick=this.onDeleteClick.bind(this)
   }
+
+  componentDidMount(){
+    const {id} = this.props.match.params
+    if(id)this.props.getEvent(id)
+  }
+
 renderFireld(field){
   const {input,label,type,meta:{touched,error}} =field
 
@@ -28,18 +34,18 @@ async onDeleteClick(){
 }
 
 async onSubmit(values){
-  await this.props.postEvent(values)
+  await this.props.putEvent(values)
   this.props.history.push('/')
 }
 
 render (){
-  const {handleSubmit, pristine,submitting} = this.props
+  const {handleSubmit, pristine,submitting, invalid} = this.props
     return (
       <form onSubmit={handleSubmit(this.onSubmit)}>
         <div><Field label ="Title" name="title" type="text" component={this.renderFireld} /></div>
         <div><Field label ="Body" name="body" type="text" component={this.renderFireld }/> </div>
          <div>
-           <input type ="submit" value="Submit" disabled={pristine ||submitting }/>
+           <input type ="submit" value="Submit" disabled={pristine ||submitting||invalid }/>
            <Link to ="/" >Cancel</Link>
            <Link to ="/" onClick={this.onDeleteClick} >Delete</Link>
          </div>
@@ -47,7 +53,6 @@ render (){
     )
   }
 }
-const mapDispatchToProps =({deleteEvent})
 const validate = values => {
   const errors = {}
  if(!values.title)errors.title = "Enter a title, please"
@@ -55,6 +60,13 @@ const validate = values => {
   return errors
 }
 
-export default connect(null,mapDispatchToProps)(
+const mapStateToProps = (state, ownProps) =>{
+  const event = state.events[ownProps.match.params.id]
+  return {initialValues : event, event}
+}
+
+const mapDispatchToProps =({deleteEvent ,getEvent ,putEvent})
+
+export default connect(mapStateToProps,mapDispatchToProps)(
   reduxForm( {validate,form:'eventShowForm'})(EventsShow)
   )

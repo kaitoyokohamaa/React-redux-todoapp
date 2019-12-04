@@ -1,21 +1,33 @@
 import axios from 'axios'
 
 export const READ_EVENTS = 'READ_EVENTS'
+export const READ_EVENT = 'READ_EVENT'
 export const CREATE_EVENT = 'CREATE_EVENT'
+export const UPDETE_EVENT = 'UPDETE_EVENT'
 export const DELETE_EVENT = 'DELETE_EVENT'
 
 const ROOT_URL = 'https://udemy-utils.herokuapp.com/api/v1'
 const QUERYSTRING = '?token=token123'
 export const readEvents = ()=> async dispatch => { 
-  const responese = await axios.get(`${ROOT_URL}/events${QUERYSTRING}`)
-  console.log(responese)
-    dispatch({type: READ_EVENTS ,responese})
+  const response = await axios.get(`${ROOT_URL}/events${QUERYSTRING}`)
+  console.log(response)
+    dispatch({type: READ_EVENTS ,response})
 }
 
 export const postEvent = values => async dispatch => { 
-  const responese = await axios.post(`${ROOT_URL}/events${QUERYSTRING}`,values)
-  console.log(responese)
-    dispatch({type: CREATE_EVENT,responese})
+  const response = await axios.post(`${ROOT_URL}/events${QUERYSTRING}`,values)
+  console.log(response)
+    dispatch({type: CREATE_EVENT,response})
+}
+
+export const putEvent= values => async dispatch=>{
+  const response = await axios.put(`${ROOT_URL}/events/${values.id}${QUERYSTRING}`, values)
+  dispatch({type: UPDETE_EVENT,response})
+}
+
+export const getEvent = id => async dispatch =>{
+  const response = await axios.get(`${ROOT_URL}/events/${id}${QUERYSTRING}`)
+  dispatch({ type:READ_EVENT,response })
 }
 
 export const deleteEvent = id => async dispatch => { 
