@@ -11,7 +11,7 @@ export default (events = {}, action) => {
   switch (action.type) {
     case CREATE_EVENT:
     case READ_EVENT:
-    case READ_EVENT:
+    case UPDETE_EVENT:
       const data= action.response.data
       return{ ...events,[data.id]:data}
       //{id: 4, title: "Let's have an event 4!", body: "This is the body for event 4."}
